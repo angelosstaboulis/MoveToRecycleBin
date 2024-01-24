@@ -18,7 +18,12 @@ struct ContentView: View {
                 TextField("",text:$directoryPath)
                 .padding(30)
                 Button {
-                    directoriesArray.append(contentsOf: getListPath())
+                    if directoriesArray.count > 0 {
+                        directoriesArray.removeAll()
+                        directoriesArray.append(contentsOf: getListPath())
+                    }else{
+                        directoriesArray.append(contentsOf: getListPath())
+                    }
                 } label: {
                     Text("Fill List with Files").frame(width:200,height:45)
                 }.padding(10)
@@ -44,20 +49,19 @@ struct ContentView: View {
                 }
 
             } message: {
-                Text("Fill will be deleted")
+                Text("File will be deleted")
             }
             
         }
     }
 
     func getListPath()->[String]{
-        var temp:[String] = []
         do{
-            temp.append(contentsOf:try FileManager.default.contentsOfDirectory(atPath:directoryPath))
+            return try FileManager.default.contentsOfDirectory(atPath:directoryPath)
         }catch{
             debugPrint("something went wrong!!!!")
+            return []
         }
-        return temp
     }
     func removeItem(value:String){
         for item in 0..<directoriesArray.count{
